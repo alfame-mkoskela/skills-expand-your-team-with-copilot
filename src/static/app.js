@@ -818,7 +818,8 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Build a shareable URL for an activity
+  // Build a shareable URL for an activity by appending the activity name as a
+  // query parameter, clearing any existing search/hash from the current URL.
   function buildShareUrl(activityName) {
     const url = new URL(window.location.href);
     url.search = "";
@@ -827,7 +828,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return url.toString();
   }
 
-  // Share an activity on a given platform
+  // Share an activity on a given platform.
+  // @param {string} activityName - The name of the activity to share.
+  // @param {string} platform - One of "twitter", "whatsapp", or "copy".
   function shareActivity(activityName, platform) {
     const shareUrl = buildShareUrl(activityName);
     const shareText = `Check out "${activityName}" – an extracurricular activity at Mergington High School!`;
@@ -848,7 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
       navigator.clipboard.writeText(shareUrl).then(() => {
         showMessage("Link copied to clipboard!", "success");
       }).catch(() => {
-        showMessage("Could not copy link.", "error");
+        showMessage("Failed to copy link. Please try again or copy manually.", "error");
       });
     }
   }
