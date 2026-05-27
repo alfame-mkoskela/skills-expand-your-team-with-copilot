@@ -569,6 +569,12 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <button class="share-btn share-twitter" data-activity="${name}" aria-label="Share on X (Twitter)" title="Share on X (Twitter)">𝕏</button>
+        <button class="share-btn share-whatsapp" data-activity="${name}" aria-label="Share on WhatsApp" title="Share on WhatsApp">💬</button>
+        <button class="share-btn share-copy" data-activity="${name}" aria-label="Copy link" title="Copy link">🔗</button>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -586,6 +592,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Wire up share buttons
+    activityCard.querySelectorAll(".share-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const platform = btn.classList.contains("share-twitter")
+          ? "twitter"
+          : btn.classList.contains("share-whatsapp")
+          ? "whatsapp"
+          : "copy";
+        shareActivity(btn.dataset.activity, platform);
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
@@ -797,6 +816,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     );
+  }
+
+  // Build a shareable URL for an activity by appending the activity name as a
+  // query parameter, clearing any existing search/hash from the current URL.
+  function buildShareUrl(activityName) {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.hash = "";
+    url.searchParams.set("activity", activityName);
+    return url.toString();
+  }
+
+  // Share an activity on a given platform.
+  // @param {string} activityName - The name of the activity to share.
+  // @param {string} platform - One of "twitter", "whatsapp", or "copy".
+  function shareActivity(activityName, platform) {
+    const shareUrl = buildShareUrl(activityName);
+    const shareText = `Check out "${activityName}" – an extracurricular activity at Mergington High School!`;
+
+    if (platform === "twitter") {
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    } else if (platform === "whatsapp") {
+      window.open(
+        `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    } else if (platform === "copy") {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showMessage("Link copied to clipboard!", "success");
+      }).catch(() => {
+        showMessage("Failed to copy link. Please try again or copy manually.", "error");
+      });
+    }
   }
 
   // Show message function
