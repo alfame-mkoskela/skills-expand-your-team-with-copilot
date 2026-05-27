@@ -468,6 +468,40 @@ button {
   font-size: 0.85rem;
 }
 
+/* Share buttons */
+.share-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+}
+
+.share-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.share-btn {
+  background: var(--background);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  line-height: 1.4;
+}
+
+.share-btn:hover {
+  background-color: var(--border);
+  border-color: var(--border-focus);
+}
+
 footer {
   text-align: center;
   margin-top: 20px;
